@@ -1,0 +1,13 @@
+{
+  "provider": "mock",
+  "faults": [
+    {
+      "tool": "search_documents",
+      "remaining": 1,
+      "document_id": null
+    }
+  ],
+  "max_steps": 14,
+  "max_tool_calls": 12,
+  "corpus_file": "data/knowledge_base.json"
+}

@@ -1,0 +1,37 @@
+{
+  "status": "tool_error",
+  "answer": "工具查询未完成，暂不能可靠回答。以下引用仅为已取得的部分资料：\n- [D01/C01，2026-01-15] 报销材料应在费用发生后 30 天内提交。",
+  "citations": [
+    {
+      "document_id": "D01",
+      "title": "费用报销管理办法",
+      "version_date": "2026-01-15",
+      "scope": "未注明",
+      "chunk_id": "C01",
+      "policy_key": "expense_submission_deadline",
+      "quote": "报销材料应在费用发生后 30 天内提交。"
+    }
+  ],
+  "conflicts": [],
+  "gaps": [
+    "部分资料因工具连续失败而未能取得。"
+  ],
+  "follow_up_question": "",
+  "stop_reason": "工具仍不可用，保留已读证据并明确停止。",
+  "question": "报销材料应在多少天内提交？",
+  "run": {
+    "run_id": "5f999c9d-2ff2-4a7b-aa71-6e34616fecf4",
+    "execution_mode": "offline_mock",
+    "model": "offline-observation-mock-v1",
+    "mock_boundary": "仅验证流程，不能证明真实模型的 ReAct 决策效果。",
+    "corpus_version": "synthetic-2026-10-28-v1",
+    "corpus_sha256": "b4fcde35c2a33ffc2c60ea3c5e08c4fbabe665b386af08d1ca009707ab9cee66",
+    "model_calls": 5,
+    "tool_calls": 5,
+    "max_steps": 14,
+    "max_tool_calls": 12,
+    "started_at": "2026-10-28T13:15:46.730+00:00",
+    "finished_at": "2026-10-28T13:15:46.730+00:00",
+    "duration_ms": 0.175
+  }
+}

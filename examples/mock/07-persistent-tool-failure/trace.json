@@ -1,0 +1,209 @@
+[
+  {
+    "step": 1,
+    "source": "offline_mock",
+    "event": "action",
+    "action": {
+      "tool": "search_documents",
+      "arguments": {
+        "query": "报销材料应在多少天内提交？",
+        "limit": 5,
+        "reason": "先检索与问题及对话上下文有关的文档。"
+      }
+    },
+    "decision_summary": "先检索与问题及对话上下文有关的文档。",
+    "model_response": {},
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "query": "报销材料应在多少天内提交？",
+      "expanded_query": "报销材料应在多少天内提交？ 报销 报账 交票 交发票 差旅费用 出差花的钱 提交期限 多少天内 最晚 多久要交 截止",
+      "total": 2,
+      "has_more": false,
+      "hits": [
+        {
+          "document_id": "D01",
+          "title": "费用报销管理办法",
+          "version_date": "2026-01-15",
+          "scope": "未注明",
+          "chunk_ids": [
+            "C01"
+          ],
+          "related_document_ids": [
+            "D01",
+            "D02"
+          ],
+          "score": 30
+        },
+        {
+          "document_id": "D02",
+          "title": "费用报销补充通知",
+          "version_date": "2026-09-01",
+          "scope": "未注明",
+          "chunk_ids": [
+            "C01"
+          ],
+          "related_document_ids": [
+            "D01",
+            "D02"
+          ],
+          "score": 30
+        }
+      ],
+      "note": "命中仅为线索；必须读取原文。版本日期不代表优先级。"
+    },
+    "return_summary": "命中 2 份；返回 ['D01', 'D02']；has_more=False"
+  },
+  {
+    "step": 2,
+    "source": "offline_mock",
+    "event": "action",
+    "action": {
+      "tool": "read_document",
+      "arguments": {
+        "document_id": "D01",
+        "reason": "命中资料只是线索，需要读取原文及同主题候选文档。"
+      }
+    },
+    "decision_summary": "命中资料只是线索，需要读取原文及同主题候选文档。",
+    "model_response": {},
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "document_id": "D01",
+      "title": "费用报销管理办法",
+      "version_date": "2026-01-15",
+      "scope": "未注明",
+      "chunk_ids": [
+        "C01"
+      ],
+      "related_document_ids": [
+        "D01",
+        "D02"
+      ],
+      "chunks": [
+        {
+          "chunk_id": "C01",
+          "policy_key": "expense_submission_deadline",
+          "text": "报销材料应在费用发生后 30 天内提交。"
+        }
+      ]
+    },
+    "return_summary": "读到 D01 (2026-01-15) 的 1 个原文片段。"
+  },
+  {
+    "step": 3,
+    "source": "offline_mock",
+    "event": "action",
+    "action": {
+      "tool": "read_document",
+      "arguments": {
+        "document_id": "D02",
+        "reason": "命中资料只是线索，需要读取原文及同主题候选文档。"
+      }
+    },
+    "decision_summary": "命中资料只是线索，需要读取原文及同主题候选文档。",
+    "model_response": {},
+    "executed": true,
+    "observation": {
+      "ok": false,
+      "error": {
+        "code": "INJECTED_TOOL_FAILURE",
+        "message": "合成工具暂时不可用；本次调用未返回资料。",
+        "retryable": true
+      }
+    },
+    "return_summary": "INJECTED_TOOL_FAILURE: 合成工具暂时不可用；本次调用未返回资料。"
+  },
+  {
+    "step": 4,
+    "source": "offline_mock",
+    "event": "action",
+    "action": {
+      "tool": "read_document",
+      "arguments": {
+        "document_id": "D02",
+        "reason": "观察到可恢复工具错误，选择再试一次；已有结果仍保留。"
+      }
+    },
+    "decision_summary": "观察到可恢复工具错误，选择再试一次；已有结果仍保留。",
+    "model_response": {},
+    "executed": true,
+    "observation": {
+      "ok": false,
+      "error": {
+        "code": "INJECTED_TOOL_FAILURE",
+        "message": "合成工具暂时不可用；本次调用未返回资料。",
+        "retryable": true
+      }
+    },
+    "return_summary": "INJECTED_TOOL_FAILURE: 合成工具暂时不可用；本次调用未返回资料。"
+  },
+  {
+    "step": 5,
+    "source": "offline_mock",
+    "event": "action",
+    "action": {
+      "tool": "finish",
+      "arguments": {
+        "status": "tool_error",
+        "citations": [
+          {
+            "document_id": "D01",
+            "chunk_id": "C01",
+            "quote": "报销材料应在费用发生后 30 天内提交。"
+          }
+        ],
+        "gaps": [
+          "部分资料因工具连续失败而未能取得。"
+        ],
+        "follow_up_question": "",
+        "reason": "工具仍不可用，保留已读证据并明确停止。"
+      }
+    },
+    "decision_summary": "工具仍不可用，保留已读证据并明确停止。",
+    "model_response": {},
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "result": {
+        "status": "tool_error",
+        "answer": "工具查询未完成，暂不能可靠回答。以下引用仅为已取得的部分资料：\n- [D01/C01，2026-01-15] 报销材料应在费用发生后 30 天内提交。",
+        "citations": [
+          {
+            "document_id": "D01",
+            "title": "费用报销管理办法",
+            "version_date": "2026-01-15",
+            "scope": "未注明",
+            "chunk_id": "C01",
+            "policy_key": "expense_submission_deadline",
+            "quote": "报销材料应在费用发生后 30 天内提交。"
+          }
+        ],
+        "conflicts": [],
+        "gaps": [
+          "部分资料因工具连续失败而未能取得。"
+        ],
+        "follow_up_question": "",
+        "stop_reason": "工具仍不可用，保留已读证据并明确停止。",
+        "question": "报销材料应在多少天内提交？",
+        "run": {
+          "run_id": "5f999c9d-2ff2-4a7b-aa71-6e34616fecf4",
+          "execution_mode": "offline_mock",
+          "model": "offline-observation-mock-v1",
+          "mock_boundary": "仅验证流程，不能证明真实模型的 ReAct 决策效果。",
+          "corpus_version": "synthetic-2026-10-28-v1",
+          "corpus_sha256": "b4fcde35c2a33ffc2c60ea3c5e08c4fbabe665b386af08d1ca009707ab9cee66",
+          "model_calls": 5,
+          "tool_calls": 5,
+          "max_steps": 14,
+          "max_tool_calls": 12,
+          "started_at": "2026-10-28T13:15:46.730+00:00",
+          "finished_at": "2026-10-28T13:15:46.730+00:00",
+          "duration_ms": 0.175
+        }
+      }
+    },
+    "return_summary": "最终状态 tool_error；有效引用 1 个。"
+  }
+]

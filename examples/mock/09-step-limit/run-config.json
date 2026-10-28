@@ -1,0 +1,7 @@
+{
+  "provider": "mock",
+  "faults": [],
+  "max_steps": 1,
+  "max_tool_calls": 12,
+  "corpus_file": "data/knowledge_base.json"
+}

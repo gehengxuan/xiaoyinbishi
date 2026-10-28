@@ -1,0 +1,22 @@
+name: Offline validation
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Unit and HTTP contract tests (no API key)
+        run: PYTHONPATH=src python scripts/test.py --output-dir runs/ci-tests
+      - name: Offline acceptance cases
+        run: PYTHONPATH=src python scripts/evaluate.py --provider mock --output-dir runs/ci-acceptance

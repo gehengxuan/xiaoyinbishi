@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-10-28T13:22:41.992+00:00",
+  "python": "3.13.7",
+  "command": "PYTHONPATH=src python3 scripts/test.py",
+  "tests_run": 41,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "duration_seconds": 35.773,
+  "successful": true,
+  "boundary": "包含确定性 Mock、运行时校验和本机假 HTTP 服务的接口测试；不包含真实模型效果验收。"
+}

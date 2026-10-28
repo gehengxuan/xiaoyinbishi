@@ -1,0 +1,53 @@
+[
+  {
+    "step": 1,
+    "source": "offline_mock",
+    "event": "action",
+    "action": {
+      "tool": "finish",
+      "arguments": {
+        "status": "needs_clarification",
+        "citations": [],
+        "gaps": [
+          "问题没有说明要查询的制度或产品事项。"
+        ],
+        "follow_up_question": "你要查询哪项制度或产品功能？",
+        "reason": "缺少可检索的主题，先请求补充。"
+      }
+    },
+    "decision_summary": "缺少可检索的主题，先请求补充。",
+    "model_response": {},
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "result": {
+        "status": "needs_clarification",
+        "answer": "需要补充问题或适用范围后才能可靠回答。",
+        "citations": [],
+        "conflicts": [],
+        "gaps": [
+          "问题没有说明要查询的制度或产品事项。"
+        ],
+        "follow_up_question": "你要查询哪项制度或产品功能？",
+        "stop_reason": "缺少可检索的主题，先请求补充。",
+        "question": "那个呢？",
+        "run": {
+          "run_id": "2be4d5a1-558f-4034-8ebc-d90149a3e7cb",
+          "execution_mode": "offline_mock",
+          "model": "offline-observation-mock-v1",
+          "mock_boundary": "仅验证流程，不能证明真实模型的 ReAct 决策效果。",
+          "corpus_version": "synthetic-2026-10-28-v1",
+          "corpus_sha256": "b4fcde35c2a33ffc2c60ea3c5e08c4fbabe665b386af08d1ca009707ab9cee66",
+          "model_calls": 1,
+          "tool_calls": 1,
+          "max_steps": 14,
+          "max_tool_calls": 12,
+          "started_at": "2026-10-28T13:15:46.731+00:00",
+          "finished_at": "2026-10-28T13:15:46.731+00:00",
+          "duration_ms": 0.047
+        }
+      }
+    },
+    "return_summary": "最终状态 needs_clarification；有效引用 0 个。"
+  }
+]

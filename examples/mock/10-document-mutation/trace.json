@@ -1,0 +1,148 @@
+[
+  {
+    "step": 1,
+    "source": "offline_mock",
+    "event": "action",
+    "action": {
+      "tool": "search_documents",
+      "arguments": {
+        "query": "正式员工一年有多少天带薪年假？",
+        "limit": 5,
+        "reason": "先检索与问题及对话上下文有关的文档。"
+      }
+    },
+    "decision_summary": "先检索与问题及对话上下文有关的文档。",
+    "model_response": {},
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "query": "正式员工一年有多少天带薪年假？",
+      "expanded_query": "正式员工一年有多少天带薪年假？ 年假 带薪假 休假 歇几天 休几天 假期",
+      "total": 1,
+      "has_more": false,
+      "hits": [
+        {
+          "document_id": "D03",
+          "title": "员工休假制度",
+          "version_date": "2026-06-01",
+          "scope": "正式员工",
+          "chunk_ids": [
+            "C01",
+            "C02"
+          ],
+          "related_document_ids": [
+            "D03"
+          ],
+          "score": 28
+        }
+      ],
+      "note": "命中仅为线索；必须读取原文。版本日期不代表优先级。"
+    },
+    "return_summary": "命中 1 份；返回 ['D03']；has_more=False"
+  },
+  {
+    "step": 2,
+    "source": "offline_mock",
+    "event": "action",
+    "action": {
+      "tool": "read_document",
+      "arguments": {
+        "document_id": "D03",
+        "reason": "命中资料只是线索，需要读取原文及同主题候选文档。"
+      }
+    },
+    "decision_summary": "命中资料只是线索，需要读取原文及同主题候选文档。",
+    "model_response": {},
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "document_id": "D03",
+      "title": "员工休假制度",
+      "version_date": "2026-06-01",
+      "scope": "正式员工",
+      "chunk_ids": [
+        "C01",
+        "C02"
+      ],
+      "related_document_ids": [
+        "D03"
+      ],
+      "chunks": [
+        {
+          "chunk_id": "C01",
+          "policy_key": "annual_leave_entitlement",
+          "text": "正式员工每年享有 12 天带薪年假。"
+        },
+        {
+          "chunk_id": "C02",
+          "policy_key": "annual_leave_notice",
+          "text": "年假须至少提前 3 个工作日申请。"
+        }
+      ]
+    },
+    "return_summary": "读到 D03 (2026-06-01) 的 2 个原文片段。"
+  },
+  {
+    "step": 3,
+    "source": "offline_mock",
+    "event": "action",
+    "action": {
+      "tool": "finish",
+      "arguments": {
+        "status": "answered",
+        "citations": [
+          {
+            "document_id": "D03",
+            "chunk_id": "C01",
+            "quote": "正式员工每年享有 12 天带薪年假。"
+          }
+        ],
+        "gaps": [],
+        "follow_up_question": "",
+        "reason": "已读取相关原文，未发现同主题同范围的不同表述，引用原文作答。"
+      }
+    },
+    "decision_summary": "已读取相关原文，未发现同主题同范围的不同表述，引用原文作答。",
+    "model_response": {},
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "result": {
+        "status": "answered",
+        "answer": "根据已读取的资料：\n- [D03/C01，2026-06-01] 正式员工每年享有 12 天带薪年假。",
+        "citations": [
+          {
+            "document_id": "D03",
+            "title": "员工休假制度",
+            "version_date": "2026-06-01",
+            "scope": "正式员工",
+            "chunk_id": "C01",
+            "policy_key": "annual_leave_entitlement",
+            "quote": "正式员工每年享有 12 天带薪年假。"
+          }
+        ],
+        "conflicts": [],
+        "gaps": [],
+        "follow_up_question": "",
+        "stop_reason": "已读取相关原文，未发现同主题同范围的不同表述，引用原文作答。",
+        "question": "正式员工一年有多少天带薪年假？",
+        "run": {
+          "run_id": "30cca533-8b82-4709-bfd0-cf42dbf9e9ed",
+          "execution_mode": "offline_mock",
+          "model": "offline-observation-mock-v1",
+          "mock_boundary": "仅验证流程，不能证明真实模型的 ReAct 决策效果。",
+          "corpus_version": "synthetic-2026-10-28-v1:10-document-mutation",
+          "corpus_sha256": "4c2b5cd8fd0c8b10734f3f479317bea14b35252c420723e9adb76510f640cb52",
+          "model_calls": 3,
+          "tool_calls": 3,
+          "max_steps": 14,
+          "max_tool_calls": 12,
+          "started_at": "2026-10-28T13:15:46.733+00:00",
+          "finished_at": "2026-10-28T13:15:46.733+00:00",
+          "duration_ms": 0.136
+        }
+      }
+    },
+    "return_summary": "最终状态 answered；有效引用 1 个。"
+  }
+]

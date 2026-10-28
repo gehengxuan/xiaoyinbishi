@@ -1,0 +1,55 @@
+[
+  {
+    "step": 1,
+    "source": "offline_mock",
+    "event": "action",
+    "action": {
+      "tool": "search_documents",
+      "arguments": {
+        "query": "正式员工一年有多少天带薪年假？",
+        "limit": 5,
+        "reason": "先检索与问题及对话上下文有关的文档。"
+      }
+    },
+    "decision_summary": "先检索与问题及对话上下文有关的文档。",
+    "model_response": {},
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "query": "正式员工一年有多少天带薪年假？",
+      "expanded_query": "正式员工一年有多少天带薪年假？ 年假 带薪假 休假 歇几天 休几天 假期",
+      "total": 1,
+      "has_more": false,
+      "hits": [
+        {
+          "document_id": "D03",
+          "title": "员工休假制度",
+          "version_date": "2026-06-01",
+          "scope": "正式员工",
+          "chunk_ids": [
+            "C01",
+            "C02"
+          ],
+          "related_document_ids": [
+            "D03"
+          ],
+          "score": 28
+        }
+      ],
+      "note": "命中仅为线索；必须读取原文。版本日期不代表优先级。"
+    },
+    "return_summary": "命中 1 份；返回 ['D03']；has_more=False"
+  },
+  {
+    "event": "limit_reached",
+    "source": "runtime",
+    "observation": {
+      "ok": false,
+      "error": {
+        "code": "STEP_LIMIT",
+        "message": "模型决策步数达到上限。",
+        "retryable": false
+      }
+    }
+  }
+]

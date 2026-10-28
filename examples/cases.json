@@ -1,0 +1,79 @@
+[
+  {
+    "id": "01-clear",
+    "acceptance": ["明确答案"],
+    "input": {"question": "正式员工一年有多少天带薪年假？"},
+    "expected": {"status": "answered", "citation_ids": ["D03"], "answer_contains": ["10 天"]}
+  },
+  {
+    "id": "02-conflict",
+    "acceptance": ["文档冲突"],
+    "input": {"question": "报销材料应在多少天内提交？"},
+    "expected": {"status": "needs_clarification", "citation_ids": ["D01", "D02"], "answer_contains": ["30 天", "15 天"], "conflict_count": 1}
+  },
+  {
+    "id": "03-out-of-domain",
+    "acceptance": ["资料外问题"],
+    "input": {"question": "公司提供火星移民补贴吗？"},
+    "expected": {"status": "not_found", "citation_ids": [], "min_successful_searches": 2}
+  },
+  {
+    "id": "04-paraphrase",
+    "acceptance": ["改写后的相似问题"],
+    "input": {"question": "想休个带薪假，一年一共能歇几天？"},
+    "expected": {"status": "answered", "citation_ids": ["D03"], "answer_contains": ["10 天"]}
+  },
+  {
+    "id": "05-context-follow-up",
+    "acceptance": ["上下文追问"],
+    "input": {
+      "question": "那需要提前多久申请？",
+      "history": [
+        {"role": "user", "content": "正式员工一年有多少天年假？"},
+        {"role": "assistant", "content": "根据 D03，正式员工每年享有 10 天带薪年假。"}
+      ]
+    },
+    "expected": {"status": "answered", "citation_ids": ["D03"], "answer_contains": ["提前 3 个工作日"]}
+  },
+  {
+    "id": "06-transient-tool-failure",
+    "acceptance": ["工具失败", "观察错误后再选择动作"],
+    "input": {"question": "正式员工一年有多少天带薪年假？"},
+    "faults": [{"tool": "search_documents", "remaining": 1}],
+    "expected": {"status": "answered", "citation_ids": ["D03"], "answer_contains": ["10 天"], "min_failed_tools": 1}
+  },
+  {
+    "id": "07-persistent-tool-failure",
+    "acceptance": ["工具失败", "保留已成功读取的资料"],
+    "input": {"question": "报销材料应在多少天内提交？"},
+    "faults": [{"tool": "read_document", "document_id": "D02", "remaining": -1}],
+    "expected": {"status": "tool_error", "citation_ids": ["D01"], "min_failed_tools": 2}
+  },
+  {
+    "id": "08-missing-topic",
+    "acceptance": ["信息不足"],
+    "input": {"question": "那个呢？"},
+    "expected": {"status": "needs_clarification", "citation_ids": []}
+  },
+  {
+    "id": "09-step-limit",
+    "acceptance": ["执行上限"],
+    "input": {"question": "正式员工一年有多少天带薪年假？"},
+    "max_steps": 1,
+    "expected": {"status": "limit_reached", "citation_ids": []}
+  },
+  {
+    "id": "10-document-mutation",
+    "acceptance": ["替换文档后答案变化"],
+    "input": {"question": "正式员工一年有多少天带薪年假？"},
+    "overrides": [{"document_id": "D03", "chunk_id": "C01", "text": "正式员工每年享有 12 天带薪年假。"}],
+    "expected": {"status": "answered", "citation_ids": ["D03"], "answer_contains": ["12 天"], "answer_excludes": ["10 天"]}
+  },
+  {
+    "id": "11-conflict-removed",
+    "acceptance": ["替换文档后动作变化"],
+    "input": {"question": "报销材料应在多少天内提交？"},
+    "overrides": [{"document_id": "D02", "chunk_id": "C01", "text": "报销材料应在费用发生后 30 天内提交。"}],
+    "expected": {"status": "answered", "citation_ids": ["D01"], "answer_contains": ["30 天"], "conflict_count": 0}
+  }
+]
