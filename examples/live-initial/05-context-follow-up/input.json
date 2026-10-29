@@ -1,0 +1,13 @@
+{
+  "question": "那需要提前多久申请？",
+  "history": [
+    {
+      "role": "user",
+      "content": "正式员工一年有多少天年假？"
+    },
+    {
+      "role": "assistant",
+      "content": "根据 D03，正式员工每年享有 10 天带薪年假。"
+    }
+  ]
+}

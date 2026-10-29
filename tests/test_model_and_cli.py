@@ -3,6 +3,7 @@ import copy
 import io
 import json
 import os
+import ssl
 import subprocess
 import sys
 import threading
@@ -87,6 +88,24 @@ class ModelAdapterTests(unittest.TestCase):
     def test_config_error_does_not_echo_secret(self):
         with self.assertRaises(ValueError) as caught:
             DeepSeekModel.from_env({"DEEPSEEK_API_KEY": "test-only", "DEEPSEEK_BASE_URL": "https://user:private-test-key@example.invalid"})
+        self.assertNotIn("private-test-key", str(caught.exception))
+
+    def test_insufficient_balance_has_actionable_sanitized_error(self):
+        model = DeepSeekModel("private-test-key")
+        failure = urllib.error.HTTPError("https://example.invalid", 402, "private-test-key", {}, io.BytesIO(b"private-test-key"))
+        with patch("urllib.request.urlopen", side_effect=failure) as transport:
+            with self.assertRaises(ModelError) as caught:
+                model.choose([], TOOL_SCHEMAS)
+        self.assertIn("余额不足", str(caught.exception))
+        self.assertNotIn("private-test-key", str(caught.exception))
+        self.assertEqual(transport.call_count, 1)
+
+    def test_tls_error_points_to_ca_configuration_without_echoing_details(self):
+        failure = urllib.error.URLError(ssl.SSLCertVerificationError(1, "private-test-key"))
+        with patch("urllib.request.urlopen", side_effect=failure):
+            with self.assertRaises(ModelError) as caught:
+                DeepSeekModel("private-test-key").choose([], TOOL_SCHEMAS)
+        self.assertIn("SSL_CERT_FILE", str(caught.exception))
         self.assertNotIn("private-test-key", str(caught.exception))
 
     def test_missing_key_is_not_replaced_by_mock(self):

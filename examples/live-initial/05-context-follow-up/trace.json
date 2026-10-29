@@ -1,0 +1,172 @@
+[
+  {
+    "step": 1,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "search_documents",
+      "arguments": {
+        "query": "年假 提前申请 天数",
+        "limit": 10,
+        "reason": "追问年假申请需提前多久，需检索休假申请流程相关文档。"
+      }
+    },
+    "decision_summary": "追问年假申请需提前多久，需检索休假申请流程相关文档。",
+    "model_response": {
+      "id": "a88309f4-983a-4010-88d2-d5f5083ea7a1",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1095,
+        "completion_tokens": 85,
+        "total_tokens": 1180
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "query": "年假 提前申请 天数",
+      "expanded_query": "年假 提前申请 天数 年假 带薪假 休假 歇几天 休几天 假期 提前申请 提前多久 什么时候申请 提前几天",
+      "total": 1,
+      "has_more": false,
+      "hits": [
+        {
+          "document_id": "D03",
+          "title": "员工休假制度",
+          "version_date": "2026-06-01",
+          "scope": "正式员工",
+          "chunk_ids": [
+            "C01",
+            "C02"
+          ],
+          "related_document_ids": [
+            "D03"
+          ],
+          "score": 34
+        }
+      ],
+      "note": "命中仅为线索；必须读取原文。版本日期不代表优先级。"
+    },
+    "return_summary": "命中 1 份；返回 ['D03']；has_more=False"
+  },
+  {
+    "step": 2,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "read_document",
+      "arguments": {
+        "document_id": "D03",
+        "reason": "读取员工休假制度原文，确认年假申请提前期限。"
+      }
+    },
+    "decision_summary": "读取员工休假制度原文，确认年假申请提前期限。",
+    "model_response": {
+      "id": "fbcb6cbc-082b-4556-b25d-0fc3bf9b376e",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1357,
+        "completion_tokens": 62,
+        "total_tokens": 1419
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "document_id": "D03",
+      "title": "员工休假制度",
+      "version_date": "2026-06-01",
+      "scope": "正式员工",
+      "chunk_ids": [
+        "C01",
+        "C02"
+      ],
+      "related_document_ids": [
+        "D03"
+      ],
+      "chunks": [
+        {
+          "chunk_id": "C01",
+          "policy_key": "annual_leave_entitlement",
+          "text": "正式员工每年享有 10 天带薪年假。"
+        },
+        {
+          "chunk_id": "C02",
+          "policy_key": "annual_leave_notice",
+          "text": "年假须至少提前 3 个工作日申请。"
+        }
+      ]
+    },
+    "return_summary": "读到 D03 (2026-06-01) 的 2 个原文片段。"
+  },
+  {
+    "step": 3,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "finish",
+      "arguments": {
+        "status": "answered",
+        "citations": [
+          {
+            "document_id": "D03",
+            "chunk_id": "C02",
+            "quote": "年假须至少提前 3 个工作日申请。"
+          }
+        ],
+        "gaps": [],
+        "follow_up_question": "",
+        "reason": "员工休假制度原文明确规定了年假申请的提前期限。"
+      }
+    },
+    "decision_summary": "员工休假制度原文明确规定了年假申请的提前期限。",
+    "model_response": {
+      "id": "e28ee127-ef9e-45aa-9db0-63a3abe69ea8",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1581,
+        "completion_tokens": 143,
+        "total_tokens": 1724
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "result": {
+        "status": "answered",
+        "answer": "根据已读取的资料：\n- [D03/C02，2026-06-01] 年假须至少提前 3 个工作日申请。",
+        "citations": [
+          {
+            "document_id": "D03",
+            "title": "员工休假制度",
+            "version_date": "2026-06-01",
+            "scope": "正式员工",
+            "chunk_id": "C02",
+            "policy_key": "annual_leave_notice",
+            "quote": "年假须至少提前 3 个工作日申请。"
+          }
+        ],
+        "conflicts": [],
+        "gaps": [],
+        "follow_up_question": "",
+        "stop_reason": "员工休假制度原文明确规定了年假申请的提前期限。",
+        "question": "那需要提前多久申请？",
+        "run": {
+          "run_id": "07601bf1-2750-4d59-8e6c-dcb594ee74ab",
+          "execution_mode": "live_model",
+          "model": "deepseek:deepseek-flash",
+          "mock_boundary": null,
+          "corpus_version": "synthetic-2026-10-28-v1",
+          "corpus_sha256": "b4fcde35c2a33ffc2c60ea3c5e08c4fbabe665b386af08d1ca009707ab9cee66",
+          "model_calls": 3,
+          "tool_calls": 3,
+          "max_steps": 14,
+          "max_tool_calls": 12,
+          "started_at": "2026-10-29T05:24:26.801+00:00",
+          "finished_at": "2026-10-29T05:24:29.932+00:00",
+          "duration_ms": 3131.697
+        }
+      }
+    },
+    "return_summary": "最终状态 answered；有效引用 1 个。"
+  }
+]

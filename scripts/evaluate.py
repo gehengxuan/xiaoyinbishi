@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import shutil
 from pathlib import Path
 
 from knowledge_agent.agent import Agent, utc_now
@@ -22,7 +23,9 @@ def checks_for(case: dict, result: dict, trace: list[dict], knowledge: Knowledge
 
     expected = case["expected"]
     check("任务状态", result["status"] == expected["status"])
-    check("引用文档集合", {cite["document_id"] for cite in result["citations"]} == set(expected["citation_ids"]))
+    actual_ids = {cite["document_id"] for cite in result["citations"]}
+    allowed_id_sets = expected.get("citation_id_sets", [expected.get("citation_ids", [])])
+    check("引用文档集合", any(actual_ids == set(allowed) for allowed in allowed_id_sets))
     for text in expected.get("answer_contains", []):
         check("答案包含 " + text, text in result["answer"])
     for text in expected.get("answer_excludes", []):
@@ -58,6 +61,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--cases", type=Path, default=Path("examples/cases.json"))
     parser.add_argument("--case", action="append", dest="case_ids", help="可重复指定单个 case ID")
     parser.add_argument("--output-dir", type=Path, default=None)
+    parser.add_argument("--recheck-from", type=Path, help="只重评已保存的原始记录，不调用模型；输出必须使用不同目录")
     args = parser.parse_args(argv)
     directory = args.output_dir or Path("examples/mock" if args.provider == "mock" else "examples/live")
     cases = json.loads(args.cases.read_text(encoding="utf-8"))
@@ -66,9 +70,11 @@ def main(argv: list[str] | None = None) -> int:
         if set(args.case_ids) - known:
             parser.error("--case 中存在未知 ID。")
         cases = [case for case in cases if case["id"] in args.case_ids]
-    env = environment(args.env_file) if args.provider == "deepseek" else None
+    if args.recheck_from and args.recheck_from.resolve() == directory.resolve():
+        parser.error("重评输出目录必须与原始记录目录不同，以保留原始证据。")
+    env = environment(args.env_file) if args.provider == "deepseek" and not args.recheck_from else None
     # Fail before producing any misleading 'live' artifacts if credentials/config are missing.
-    if args.provider == "deepseek":
+    if args.provider == "deepseek" and not args.recheck_from:
         try:
             DeepSeekModel.from_env(env)
         except ValueError as exc:
@@ -78,6 +84,29 @@ def main(argv: list[str] | None = None) -> int:
     rows = []
     for case in cases:
         case_dir = directory / case["id"]
+        if args.recheck_from:
+            source_dir = args.recheck_from / case["id"]
+            result = json.loads((source_dir / "output.json").read_text(encoding="utf-8"))
+            trace = json.loads((source_dir / "trace.json").read_text(encoding="utf-8"))
+            recorded_input = json.loads((source_dir / "input.json").read_text(encoding="utf-8"))
+            expected_mode = "offline_mock" if args.provider == "mock" else "live_model"
+            if recorded_input != Request.from_dict(case["input"]).to_dict() or result["run"]["execution_mode"] != expected_mode:
+                parser.error("记录输入或执行模式与当前用例不一致，不能重评。")
+            corpus_path = source_dir / "corpus.json" if (source_dir / "corpus.json").is_file() else base_path
+            knowledge = KnowledgeBase(corpus_path, Path("data/synonyms.json"))
+            if result["run"]["corpus_sha256"] != knowledge.sha256:
+                parser.error("知识库哈希与原始运行记录不一致，不能重评。")
+            case_dir.mkdir(parents=True, exist_ok=True)
+            for filename in ("input.json", "output.json", "trace.json", "trace.md", "run-config.json", "corpus.json"):
+                if (source_dir / filename).is_file():
+                    shutil.copy2(source_dir / filename, case_dir / filename)
+            checks = checks_for(case, result, trace, knowledge)
+            write_json(case_dir / "checks.json", checks)
+            passed = all(check["passed"] for check in checks)
+            actions = [event["action"]["tool"] for event in trace if "action" in event]
+            rows.append({"case_id": case["id"], "acceptance": case["acceptance"], "status": result["status"], "passed": passed, "actions": actions, "checks": checks})
+            print(f"{'PASS' if passed else 'FAIL'} {case['id']}: {result['status']} (saved records, no API calls)")
+            continue
         corpus_path = base_path
         if case.get("overrides"):
             corpus = json.loads(base_path.read_text(encoding="utf-8"))
@@ -108,11 +137,16 @@ def main(argv: list[str] | None = None) -> int:
     passed_count = sum(row["passed"] for row in rows)
     summary = {
         "generated_at": utc_now(), "provider": args.provider,
+        "evaluation_mode": "record_recheck" if args.recheck_from else "new_execution",
+        "source_records": str(args.recheck_from) if args.recheck_from else None,
         "evidence_boundary": "离线流程验收；真实模型效果尚未验证。" if args.provider == "mock" else "真实 API 调用记录；单次小样本结果，仍需人工检查相关性与检索完整性。",
         "total": len(rows), "passed": passed_count, "failed": len(rows) - passed_count, "cases": rows,
     }
     write_json(directory / "evaluation.json", summary)
-    lines = ["# 实际验收结果", "", f"模式：`{args.provider}`；通过：{passed_count}/{len(rows)}。", "", summary["evidence_boundary"], "", "| 用例 | 状态 | 检查 | 实际动作 | 记录 |", "|---|---|---|---|---|"]
+    lines = ["# 实际验收结果", "", f"模式：`{args.provider}`；通过：{passed_count}/{len(rows)}。", "", summary["evidence_boundary"], ""]
+    if args.recheck_from:
+        lines += [f"本次仅重评 `{args.recheck_from}` 的既有记录；原始输入、输出、Trace 和运行 ID 原样复制，未再次调用 API。", ""]
+    lines += ["| 用例 | 状态 | 检查 | 实际动作 | 记录 |", "|---|---|---|---|---|"]
     for row in rows:
         lines.append(f"| {row['case_id']} | {row['status']} | {'PASS' if row['passed'] else 'FAIL'} | {' → '.join(row['actions'])} | [Trace]({row['case_id']}/trace.md) |")
     (directory / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")

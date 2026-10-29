@@ -13,6 +13,8 @@ test_step_limit_is_explicit_incomplete (test_acceptance.AcceptanceTests.test_ste
 test_tool_limit_does_not_execute_next_action (test_acceptance.AcceptanceTests.test_tool_limit_does_not_execute_next_action) ... ok
 test_top_one_result_still_exposes_related_conflict_candidate (test_acceptance.AcceptanceTests.test_top_one_result_still_exposes_related_conflict_candidate) ... ok
 test_transient_failure_returns_to_planner_and_retry_succeeds (test_acceptance.AcceptanceTests.test_transient_failure_returns_to_planner_and_retry_succeeds) ... ok
+test_equivalent_document_sets_are_allowed_but_other_documents_are_rejected (test_evaluation.EvaluationTests.test_equivalent_document_sets_are_allowed_but_other_documents_are_rejected) ... ok
+test_recheck_copies_immutable_records_without_model_calls (test_evaluation.EvaluationTests.test_recheck_copies_immutable_records_without_model_calls) ... ok
 test_blank_question_is_rejected (test_guardrails.GuardrailTests.test_blank_question_is_rejected) ... ok
 test_clarification_must_cite_both_sides_of_conflict (test_guardrails.GuardrailTests.test_clarification_must_cite_both_sides_of_conflict) ... ok
 test_excessive_history_is_rejected (test_guardrails.GuardrailTests.test_excessive_history_is_rejected) ... ok
@@ -34,13 +36,15 @@ test_unknown_env_keys_are_rejected_without_echoing_values (test_model_and_cli.Co
 test_config_error_does_not_echo_secret (test_model_and_cli.ModelAdapterTests.test_config_error_does_not_echo_secret) ... ok
 test_deepseek_payload_matches_non_thinking_standard_endpoint (test_model_and_cli.ModelAdapterTests.test_deepseek_payload_matches_non_thinking_standard_endpoint) ... ok
 test_http_error_is_sanitized_and_not_retried (test_model_and_cli.ModelAdapterTests.test_http_error_is_sanitized_and_not_retried) ... ok
+test_insufficient_balance_has_actionable_sanitized_error (test_model_and_cli.ModelAdapterTests.test_insufficient_balance_has_actionable_sanitized_error) ... ok
 test_invalid_and_parallel_calls_are_rejected_without_partial_execution (test_model_and_cli.ModelAdapterTests.test_invalid_and_parallel_calls_are_rejected_without_partial_execution) ... ok
 test_missing_key_is_not_replaced_by_mock (test_model_and_cli.ModelAdapterTests.test_missing_key_is_not_replaced_by_mock) ... ok
 test_openai_payload_uses_its_own_token_field (test_model_and_cli.ModelAdapterTests.test_openai_payload_uses_its_own_token_field) ... ok
 test_parse_retains_public_usage_but_discards_internal_reasoning (test_model_and_cli.ModelAdapterTests.test_parse_retains_public_usage_but_discards_internal_reasoning) ... ok
 test_real_http_serialization_loop_with_fake_server_is_contract_test_only (test_model_and_cli.ModelAdapterTests.test_real_http_serialization_loop_with_fake_server_is_contract_test_only) ... ok
+test_tls_error_points_to_ca_configuration_without_echoing_details (test_model_and_cli.ModelAdapterTests.test_tls_error_points_to_ca_configuration_without_echoing_details) ... ok
 
 ----------------------------------------------------------------------
-Ran 41 tests in 35.724s
+Ran 45 tests in 0.784s
 
 OK

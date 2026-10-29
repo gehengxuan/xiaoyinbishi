@@ -18,6 +18,7 @@ def main() -> int:
     args = parser.parse_args()
     stream = io.StringIO()
     started = time.monotonic()
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     suite = unittest.defaultTestLoader.discover("tests")
     result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)
     log = stream.getvalue()

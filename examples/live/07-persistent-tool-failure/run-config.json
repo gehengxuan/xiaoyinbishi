@@ -1,0 +1,13 @@
+{
+  "provider": "deepseek",
+  "faults": [
+    {
+      "tool": "read_document",
+      "remaining": -1,
+      "document_id": "D02"
+    }
+  ],
+  "max_steps": 14,
+  "max_tool_calls": 12,
+  "corpus_file": "data/knowledge_base.json"
+}

@@ -1,0 +1,266 @@
+[
+  {
+    "step": 1,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "search_documents",
+      "arguments": {
+        "query": "报销材料提交期限 多少天内",
+        "limit": 10,
+        "reason": "检索报销提交时限相关制度文档"
+      }
+    },
+    "decision_summary": "检索报销提交时限相关制度文档",
+    "model_response": {
+      "id": "3daf8bac-ab24-4789-ab82-fa3b0e0f08cc",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1048,
+        "completion_tokens": 77,
+        "total_tokens": 1125
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "query": "报销材料提交期限 多少天内",
+      "expanded_query": "报销材料提交期限 多少天内 报销 报账 交票 交发票 差旅费用 出差花的钱 提交期限 多少天内 最晚 多久要交 截止",
+      "total": 2,
+      "has_more": false,
+      "hits": [
+        {
+          "document_id": "D01",
+          "title": "费用报销管理办法",
+          "version_date": "2026-01-15",
+          "scope": "未注明",
+          "chunk_ids": [
+            "C01"
+          ],
+          "related_document_ids": [
+            "D01",
+            "D02"
+          ],
+          "score": 27
+        },
+        {
+          "document_id": "D02",
+          "title": "费用报销补充通知",
+          "version_date": "2026-09-01",
+          "scope": "未注明",
+          "chunk_ids": [
+            "C01"
+          ],
+          "related_document_ids": [
+            "D01",
+            "D02"
+          ],
+          "score": 27
+        }
+      ],
+      "note": "命中仅为线索；必须读取原文。版本日期不代表优先级。"
+    },
+    "return_summary": "命中 2 份；返回 ['D01', 'D02']；has_more=False"
+  },
+  {
+    "step": 2,
+    "source": "live_model",
+    "event": "model_protocol_error",
+    "observation": {
+      "ok": false,
+      "error": {
+        "code": "MODEL_PROTOCOL_ERROR",
+        "message": "需要且仅接受一个有效的 function tool call；请按 schema 重新选择动作。",
+        "retryable": true
+      }
+    }
+  },
+  {
+    "step": 3,
+    "source": "live_model",
+    "event": "model_protocol_error",
+    "observation": {
+      "ok": false,
+      "error": {
+        "code": "MODEL_PROTOCOL_ERROR",
+        "message": "需要且仅接受一个有效的 function tool call；请按 schema 重新选择动作。",
+        "retryable": true
+      }
+    }
+  },
+  {
+    "step": 4,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "read_document",
+      "arguments": {
+        "document_id": "D01",
+        "reason": "读取费用报销管理办法原文确认提交时限"
+      }
+    },
+    "decision_summary": "读取费用报销管理办法原文确认提交时限",
+    "model_response": {
+      "id": "d0c1a17a-10d5-4ada-8c14-39d2a6fd6e01",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1480,
+        "completion_tokens": 58,
+        "total_tokens": 1538
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "document_id": "D01",
+      "title": "费用报销管理办法",
+      "version_date": "2026-01-15",
+      "scope": "未注明",
+      "chunk_ids": [
+        "C01"
+      ],
+      "related_document_ids": [
+        "D01",
+        "D02"
+      ],
+      "chunks": [
+        {
+          "chunk_id": "C01",
+          "policy_key": "expense_submission_deadline",
+          "text": "报销材料应在费用发生后 30 天内提交。"
+        }
+      ]
+    },
+    "return_summary": "读到 D01 (2026-01-15) 的 1 个原文片段。"
+  },
+  {
+    "step": 5,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "read_document",
+      "arguments": {
+        "document_id": "D02",
+        "reason": "读取同主题补充通知原文核对是否存在冲突表述"
+      }
+    },
+    "decision_summary": "读取同主题补充通知原文核对是否存在冲突表述",
+    "model_response": {
+      "id": "9b809262-32b7-46d4-9ad7-2e9f06c85824",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1661,
+        "completion_tokens": 60,
+        "total_tokens": 1721
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "document_id": "D02",
+      "title": "费用报销补充通知",
+      "version_date": "2026-09-01",
+      "scope": "未注明",
+      "chunk_ids": [
+        "C01"
+      ],
+      "related_document_ids": [
+        "D01",
+        "D02"
+      ],
+      "chunks": [
+        {
+          "chunk_id": "C01",
+          "policy_key": "expense_submission_deadline",
+          "text": "报销材料应在费用发生后 30 天内提交。"
+        }
+      ]
+    },
+    "return_summary": "读到 D02 (2026-09-01) 的 1 个原文片段。"
+  },
+  {
+    "step": 6,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "finish",
+      "arguments": {
+        "status": "answered",
+        "citations": [
+          {
+            "document_id": "D01",
+            "chunk_id": "C01",
+            "quote": "报销材料应在费用发生后 30 天内提交。"
+          },
+          {
+            "document_id": "D02",
+            "chunk_id": "C01",
+            "quote": "报销材料应在费用发生后 30 天内提交。"
+          }
+        ],
+        "gaps": [],
+        "follow_up_question": "",
+        "reason": "两份同主题文档原文表述一致，均为费用发生后30天内提交。"
+      }
+    },
+    "decision_summary": "两份同主题文档原文表述一致，均为费用发生后30天内提交。",
+    "model_response": {
+      "id": "0958cacd-86a1-4fe2-a0bc-42517c471814",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1845,
+        "completion_tokens": 178,
+        "total_tokens": 2023
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "result": {
+        "status": "answered",
+        "answer": "根据已读取的资料：\n- [D01/C01，2026-01-15] 报销材料应在费用发生后 30 天内提交。\n- [D02/C01，2026-09-01] 报销材料应在费用发生后 30 天内提交。",
+        "citations": [
+          {
+            "document_id": "D01",
+            "title": "费用报销管理办法",
+            "version_date": "2026-01-15",
+            "scope": "未注明",
+            "chunk_id": "C01",
+            "policy_key": "expense_submission_deadline",
+            "quote": "报销材料应在费用发生后 30 天内提交。"
+          },
+          {
+            "document_id": "D02",
+            "title": "费用报销补充通知",
+            "version_date": "2026-09-01",
+            "scope": "未注明",
+            "chunk_id": "C01",
+            "policy_key": "expense_submission_deadline",
+            "quote": "报销材料应在费用发生后 30 天内提交。"
+          }
+        ],
+        "conflicts": [],
+        "gaps": [],
+        "follow_up_question": "",
+        "stop_reason": "两份同主题文档原文表述一致，均为费用发生后30天内提交。",
+        "question": "报销材料应在多少天内提交？",
+        "run": {
+          "run_id": "14063e68-6b7e-48cb-b4c9-e166df77d700",
+          "execution_mode": "live_model",
+          "model": "deepseek:deepseek-flash",
+          "mock_boundary": null,
+          "corpus_version": "synthetic-2026-10-28-v1:11-conflict-removed",
+          "corpus_sha256": "ea3b9afcceb42d6a5027513fe4c626526a4a013fe6b85f04bc037750618e9d4c",
+          "model_calls": 6,
+          "tool_calls": 4,
+          "max_steps": 14,
+          "max_tool_calls": 12,
+          "started_at": "2026-10-29T05:24:47.678+00:00",
+          "finished_at": "2026-10-29T05:24:55.016+00:00",
+          "duration_ms": 7338.111
+        }
+      }
+    },
+    "return_summary": "最终状态 answered；有效引用 2 个。"
+  }
+]

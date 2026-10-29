@@ -1,0 +1,53 @@
+{
+  "generated_at": "2026-10-29T05:21:58.941+00:00",
+  "provider": "deepseek",
+  "evidence_boundary": "真实 API 调用记录；单次小样本结果，仍需人工检查相关性与检索完整性。",
+  "total": 1,
+  "passed": 0,
+  "failed": 1,
+  "cases": [
+    {
+      "case_id": "01-clear",
+      "acceptance": [
+        "明确答案"
+      ],
+      "status": "model_error",
+      "passed": false,
+      "actions": [],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": false
+        },
+        {
+          "name": "引用文档集合",
+          "passed": false
+        },
+        {
+          "name": "答案包含 10 天",
+          "passed": false
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        },
+        {
+          "name": "未回答状态说明缺口",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

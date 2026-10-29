@@ -74,6 +74,6 @@
     "acceptance": ["替换文档后动作变化"],
     "input": {"question": "报销材料应在多少天内提交？"},
     "overrides": [{"document_id": "D02", "chunk_id": "C01", "text": "报销材料应在费用发生后 30 天内提交。"}],
-    "expected": {"status": "answered", "citation_ids": ["D01"], "answer_contains": ["30 天"], "conflict_count": 0}
+    "expected": {"status": "answered", "citation_id_sets": [["D01"], ["D02"], ["D01", "D02"]], "answer_contains": ["30 天"], "conflict_count": 0}
   }
 ]

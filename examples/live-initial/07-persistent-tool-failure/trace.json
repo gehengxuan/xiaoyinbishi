@@ -1,0 +1,307 @@
+[
+  {
+    "step": 1,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "search_documents",
+      "arguments": {
+        "query": "报销材料提交期限 多少天内提交",
+        "limit": 10,
+        "reason": "检索报销提交时限相关制度文档"
+      }
+    },
+    "decision_summary": "检索报销提交时限相关制度文档",
+    "model_response": {
+      "id": "932cd667-9ec0-4135-938e-dad9e7a1381a",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1048,
+        "completion_tokens": 78,
+        "total_tokens": 1126
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "query": "报销材料提交期限 多少天内提交",
+      "expanded_query": "报销材料提交期限 多少天内提交 报销 报账 交票 交发票 差旅费用 出差花的钱 提交期限 多少天内 最晚 多久要交 截止",
+      "total": 2,
+      "has_more": false,
+      "hits": [
+        {
+          "document_id": "D01",
+          "title": "费用报销管理办法",
+          "version_date": "2026-01-15",
+          "scope": "未注明",
+          "chunk_ids": [
+            "C01"
+          ],
+          "related_document_ids": [
+            "D01",
+            "D02"
+          ],
+          "score": 28
+        },
+        {
+          "document_id": "D02",
+          "title": "费用报销补充通知",
+          "version_date": "2026-09-01",
+          "scope": "未注明",
+          "chunk_ids": [
+            "C01"
+          ],
+          "related_document_ids": [
+            "D01",
+            "D02"
+          ],
+          "score": 28
+        }
+      ],
+      "note": "命中仅为线索；必须读取原文。版本日期不代表优先级。"
+    },
+    "return_summary": "命中 2 份；返回 ['D01', 'D02']；has_more=False"
+  },
+  {
+    "step": 2,
+    "source": "live_model",
+    "event": "model_protocol_error",
+    "observation": {
+      "ok": false,
+      "error": {
+        "code": "MODEL_PROTOCOL_ERROR",
+        "message": "需要且仅接受一个有效的 function tool call；请按 schema 重新选择动作。",
+        "retryable": true
+      }
+    }
+  },
+  {
+    "step": 3,
+    "source": "live_model",
+    "event": "model_protocol_error",
+    "observation": {
+      "ok": false,
+      "error": {
+        "code": "MODEL_PROTOCOL_ERROR",
+        "message": "需要且仅接受一个有效的 function tool call；请按 schema 重新选择动作。",
+        "retryable": true
+      }
+    }
+  },
+  {
+    "step": 4,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "read_document",
+      "arguments": {
+        "document_id": "D01",
+        "reason": "读取费用报销管理办法原文核实提交时限"
+      }
+    },
+    "decision_summary": "读取费用报销管理办法原文核实提交时限",
+    "model_response": {
+      "id": "02ef98ee-3c06-4c33-844e-33785f01d629",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1483,
+        "completion_tokens": 58,
+        "total_tokens": 1541
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "document_id": "D01",
+      "title": "费用报销管理办法",
+      "version_date": "2026-01-15",
+      "scope": "未注明",
+      "chunk_ids": [
+        "C01"
+      ],
+      "related_document_ids": [
+        "D01",
+        "D02"
+      ],
+      "chunks": [
+        {
+          "chunk_id": "C01",
+          "policy_key": "expense_submission_deadline",
+          "text": "报销材料应在费用发生后 30 天内提交。"
+        }
+      ]
+    },
+    "return_summary": "读到 D01 (2026-01-15) 的 1 个原文片段。"
+  },
+  {
+    "step": 5,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "read_document",
+      "arguments": {
+        "document_id": "D02",
+        "reason": "读取同主题补充通知原文核对是否存在冲突表述"
+      }
+    },
+    "decision_summary": "读取同主题补充通知原文核对是否存在冲突表述",
+    "model_response": {
+      "id": "5a0a6682-dfcb-459f-974b-a6774a81fcc8",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1664,
+        "completion_tokens": 60,
+        "total_tokens": 1724
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": false,
+      "error": {
+        "code": "INJECTED_TOOL_FAILURE",
+        "message": "合成工具暂时不可用；本次调用未返回资料。",
+        "retryable": true
+      }
+    },
+    "return_summary": "INJECTED_TOOL_FAILURE: 合成工具暂时不可用；本次调用未返回资料。"
+  },
+  {
+    "step": 6,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "read_document",
+      "arguments": {
+        "document_id": "D02",
+        "reason": "重试读取补充通知原文以核对时限表述"
+      }
+    },
+    "decision_summary": "重试读取补充通知原文以核对时限表述",
+    "model_response": {
+      "id": "145b7dc2-84c2-4c52-8769-61a2813dcb38",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1784,
+        "completion_tokens": 60,
+        "total_tokens": 1844
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": false,
+      "error": {
+        "code": "INJECTED_TOOL_FAILURE",
+        "message": "合成工具暂时不可用；本次调用未返回资料。",
+        "retryable": true
+      }
+    },
+    "return_summary": "INJECTED_TOOL_FAILURE: 合成工具暂时不可用；本次调用未返回资料。"
+  },
+  {
+    "step": 7,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "read_document",
+      "arguments": {
+        "document_id": "D02",
+        "reason": "再次重试读取补充通知原文，确认是否与管理办法冲突"
+      }
+    },
+    "decision_summary": "再次重试读取补充通知原文，确认是否与管理办法冲突",
+    "model_response": {
+      "id": "5d2dc004-b755-4536-855b-b2d80648dc75",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1904,
+        "completion_tokens": 63,
+        "total_tokens": 1967
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": false,
+      "error": {
+        "code": "INJECTED_TOOL_FAILURE",
+        "message": "合成工具暂时不可用；本次调用未返回资料。",
+        "retryable": true
+      }
+    },
+    "return_summary": "INJECTED_TOOL_FAILURE: 合成工具暂时不可用；本次调用未返回资料。"
+  },
+  {
+    "step": 8,
+    "source": "live_model",
+    "event": "action",
+    "action": {
+      "tool": "finish",
+      "arguments": {
+        "status": "tool_error",
+        "citations": [
+          {
+            "document_id": "D01",
+            "chunk_id": "C01",
+            "quote": "报销材料应在费用发生后 30 天内提交。"
+          }
+        ],
+        "gaps": [
+          "同主题的《费用报销补充通知》(D02) 原文多次读取失败，无法确认其是否对提交时限另有规定或与管理办法冲突。"
+        ],
+        "follow_up_question": "《费用报销补充通知》(D02) 暂时无法读取，是否需要稍后重试以确认提交时限是否有补充或变更规定？",
+        "reason": "管理办法原文已读到30天时限，但同主题补充通知读取连续失败，无法排除冲突。"
+      }
+    },
+    "decision_summary": "管理办法原文已读到30天时限，但同主题补充通知读取连续失败，无法排除冲突。",
+    "model_response": {
+      "id": "42d40ee6-50c4-45d7-860c-4d22da589996",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2027,
+        "completion_tokens": 215,
+        "total_tokens": 2242
+      }
+    },
+    "executed": true,
+    "observation": {
+      "ok": true,
+      "result": {
+        "status": "tool_error",
+        "answer": "工具查询未完成，暂不能可靠回答。以下引用仅为已取得的部分资料：\n- [D01/C01，2026-01-15] 报销材料应在费用发生后 30 天内提交。",
+        "citations": [
+          {
+            "document_id": "D01",
+            "title": "费用报销管理办法",
+            "version_date": "2026-01-15",
+            "scope": "未注明",
+            "chunk_id": "C01",
+            "policy_key": "expense_submission_deadline",
+            "quote": "报销材料应在费用发生后 30 天内提交。"
+          }
+        ],
+        "conflicts": [],
+        "gaps": [
+          "同主题的《费用报销补充通知》(D02) 原文多次读取失败，无法确认其是否对提交时限另有规定或与管理办法冲突。"
+        ],
+        "follow_up_question": "《费用报销补充通知》(D02) 暂时无法读取，是否需要稍后重试以确认提交时限是否有补充或变更规定？",
+        "stop_reason": "管理办法原文已读到30天时限，但同主题补充通知读取连续失败，无法排除冲突。",
+        "question": "报销材料应在多少天内提交？",
+        "run": {
+          "run_id": "2b0186b7-4c73-4511-a4e7-c8899c81949d",
+          "execution_mode": "live_model",
+          "model": "deepseek:deepseek-flash",
+          "mock_boundary": null,
+          "corpus_version": "synthetic-2026-10-28-v1",
+          "corpus_sha256": "b4fcde35c2a33ffc2c60ea3c5e08c4fbabe665b386af08d1ca009707ab9cee66",
+          "model_calls": 8,
+          "tool_calls": 6,
+          "max_steps": 14,
+          "max_tool_calls": 12,
+          "started_at": "2026-10-29T05:24:34.068+00:00",
+          "finished_at": "2026-10-29T05:24:42.520+00:00",
+          "duration_ms": 8452.025
+        }
+      }
+    },
+    "return_summary": "最终状态 tool_error；有效引用 1 个。"
+  }
+]

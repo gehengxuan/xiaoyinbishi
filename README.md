@@ -2,12 +2,15 @@
 
 Python CLI：模型选择检索或读取工具，观察实际返回后继续查证、追问或结束。答案带文档 ID、版本日期和原文片段；冲突无优先级时请求确认，工具失败和达到上限时明确返回未完成。
 
-**交付状态：代码、离线测试及运行记录已完成；DeepSeek 真实模型验收、GitHub 远端提交仍待完成。** 离线 Mock 只验证流程，不能证明真实模型的 ReAct 决策效果。不要将 `examples/mock/` 当作真实模型运行记录。
+**交付状态：45 项测试通过；11 条 DeepSeek 真实用例完成。首轮断言 10/11，修正一条过窄的引用集合断言后，同一批原始记录重评 11/11。GitHub 远端提交尚待完成。** 原始失败与重评结果分别保留；这是一轮小样本验收，不代表广泛稳定性。离线 Mock 仅证明流程。
 
 ## 评审入口
 
 | 内容 | 入口 |
 |---|---|
+| 真实 DeepSeek 汇总、逐条复核与重评说明 | [examples/live/summary.md](examples/live/summary.md) · [review.md](examples/live/review.md) |
+| 真实正常路径 / 冲突路径 / 失败路径 | [01-clear](examples/live/01-clear/trace.md) · [02-conflict](examples/live/02-conflict/trace.md) · [07-persistent-tool-failure](examples/live/07-persistent-tool-failure/trace.md) |
+| 首轮 10/11 原始断言结果 | [examples/live-initial/summary.md](examples/live-initial/summary.md) |
 | 实际离线验收结果、11 条不同输入 | [examples/mock/summary.md](examples/mock/summary.md) |
 | 明确答案：检索 → 读取 → 回答 | [01-clear/trace.md](examples/mock/01-clear/trace.md) |
 | 冲突：读取双方 → 补查 → 追问 | [02-conflict/trace.md](examples/mock/02-conflict/trace.md) |
@@ -56,17 +59,33 @@ PYTHONPATH=src python3 -m knowledge_agent --provider deepseek --env-file .env \
   --question '报销材料应在多少天内提交？' \
   --output-dir runs/deepseek-conflict
 
-# 完整验收：会实际调用 API，生成 examples/live/ 的输入、输出、Trace 和检查结果。
-PYTHONPATH=src python3 scripts/evaluate.py --provider deepseek --env-file .env
+# 重新验收：实际调用 API，使用新目录保留已提交的原始证据。
+PYTHONPATH=src python3 scripts/evaluate.py --provider deepseek --env-file .env \
+  --output-dir examples/live-new
 
 # 先检查两条真实路径也可以；完整交付仍应运行全部用例并检查结果。
 PYTHONPATH=src python3 scripts/evaluate.py --provider deepseek --env-file .env \
-  --case 01-clear --case 02-conflict
+  --case 01-clear --case 02-conflict --output-dir runs/deepseek-two-cases
 ```
 
 接口采用非思考模式、`tool_choice=required`、`max_tokens`，标准端点不启用 Beta strict；本地仍严格校验参数和引用。模型每轮仍自行选择三个动作中的一个。配置依据核对于 **2026-10-28**：[DeepSeek Tool Calls](https://api-docs.deepseek.com/guides/tool_calls/)、[Chat Completions API](https://api-docs.deepseek.com/api/create-chat-completion/)。模型名称和账户可用性以供应商为准；缺密钥、HTTP 错误或网络错误不会自动降级为 Mock。
 
 可选的 `--provider openai` 适配器使用 `OPENAI_API_KEY`、`OPENAI_MODEL`、可选 `OPENAI_BASE_URL`；本项目主验收提供方为 DeepSeek。该兼容入口没有做真实网络验收。
+
+### 本次连接问题与离线重评
+
+2026-10-29 首次预检遇到 Python 默认 CA 路径缺失；使用系统证书包后收到了 HTTP 402。用户处理 API 余额后完成完整真实运行。两次失败记录分别保存在 [live-preflight](examples/live-preflight/summary.md)、[live-preflight-ca](examples/live-preflight-ca/summary.md)，不算作模型决策证据。402 的含义见 [DeepSeek 官方错误码](https://api-docs.deepseek.com/zh-cn/quick_start/error_codes/)。
+
+如果本机 Python 出现 TLS 证书错误，并且 `/etc/ssl/cert.pem` 存在，可以在进程环境中指定受信任系统证书包；其他平台使用自己的 CA 配置。保留 TLS 证书校验。
+
+```bash
+SSL_CERT_FILE=/etc/ssl/cert.pem PYTHONPATH=src python3 scripts/evaluate.py \
+  --provider deepseek --env-file .env --output-dir examples/live-new
+
+# 复现断言修正后的重评：不联网、不读密钥，原样复制输入/输出/Trace。
+PYTHONPATH=src python3 scripts/evaluate.py --provider deepseek \
+  --recheck-from examples/live-initial --output-dir runs/recheck
+```
 
 ## 复现验证、故障与上下文
 

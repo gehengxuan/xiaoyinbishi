@@ -3,6 +3,7 @@
 import json
 import math
 import os
+import ssl
 import urllib.error
 import urllib.request
 from typing import Mapping
@@ -70,8 +71,17 @@ class OpenAICompatibleModel:
             if len(raw) > 2_000_000:
                 raise ModelProtocolError("模型响应超过大小上限。")
         except urllib.error.HTTPError as exc:
-            raise ModelError(f"模型 API 返回 HTTP {exc.code}；未自动重试，也未切换为 Mock。") from None
-        except (urllib.error.URLError, TimeoutError, OSError):
+            hint = {
+                401: "认证失败，请在本机检查密钥。",
+                402: "API 账户余额不足，请在供应商平台确认余额后再运行。",
+                429: "达到 API 速率或并发限制，请稍后再运行。",
+            }.get(exc.code, "")
+            raise ModelError(f"模型 API 返回 HTTP {exc.code}；{hint}未自动重试，也未切换为 Mock。") from None
+        except urllib.error.URLError as exc:
+            if isinstance(exc.reason, ssl.SSLCertVerificationError):
+                raise ModelError("模型 API TLS 证书校验失败；请检查系统 CA 或 SSL_CERT_FILE。未自动重试，也未切换为 Mock。") from None
+            raise ModelError("模型 API 网络错误或超时；未自动重试，也未切换为 Mock。") from None
+        except (TimeoutError, OSError):
             raise ModelError("模型 API 网络错误或超时；未自动重试，也未切换为 Mock。") from None
         try:
             data = json.loads(raw)

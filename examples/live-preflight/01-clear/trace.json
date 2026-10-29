@@ -1,0 +1,15 @@
+[
+  {
+    "step": 1,
+    "source": "live_model",
+    "event": "model_error",
+    "observation": {
+      "ok": false,
+      "error": {
+        "code": "MODEL_ERROR",
+        "message": "模型 API 网络错误或超时；未自动重试，也未切换为 Mock。",
+        "retryable": false
+      }
+    }
+  }
+]

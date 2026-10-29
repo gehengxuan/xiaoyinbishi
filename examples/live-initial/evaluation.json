@@ -1,0 +1,515 @@
+{
+  "generated_at": "2026-10-29T05:24:55.019+00:00",
+  "provider": "deepseek",
+  "evidence_boundary": "真实 API 调用记录；单次小样本结果，仍需人工检查相关性与检索完整性。",
+  "total": 11,
+  "passed": 10,
+  "failed": 1,
+  "cases": [
+    {
+      "case_id": "01-clear",
+      "acceptance": [
+        "明确答案"
+      ],
+      "status": "answered",
+      "passed": true,
+      "actions": [
+        "search_documents",
+        "read_document",
+        "finish"
+      ],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": true
+        },
+        {
+          "name": "引用文档集合",
+          "passed": true
+        },
+        {
+          "name": "答案包含 10 天",
+          "passed": true
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case_id": "02-conflict",
+      "acceptance": [
+        "文档冲突"
+      ],
+      "status": "needs_clarification",
+      "passed": true,
+      "actions": [
+        "search_documents",
+        "read_document",
+        "read_document",
+        "finish"
+      ],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": true
+        },
+        {
+          "name": "引用文档集合",
+          "passed": true
+        },
+        {
+          "name": "答案包含 30 天",
+          "passed": true
+        },
+        {
+          "name": "答案包含 15 天",
+          "passed": true
+        },
+        {
+          "name": "冲突组数",
+          "passed": true
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        },
+        {
+          "name": "具体追问和资料缺口",
+          "passed": true
+        },
+        {
+          "name": "未回答状态说明缺口",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case_id": "03-out-of-domain",
+      "acceptance": [
+        "资料外问题"
+      ],
+      "status": "not_found",
+      "passed": true,
+      "actions": [
+        "search_documents",
+        "search_documents",
+        "finish"
+      ],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": true
+        },
+        {
+          "name": "引用文档集合",
+          "passed": true
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        },
+        {
+          "name": "未回答状态说明缺口",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case_id": "04-paraphrase",
+      "acceptance": [
+        "改写后的相似问题"
+      ],
+      "status": "answered",
+      "passed": true,
+      "actions": [
+        "search_documents",
+        "read_document",
+        "finish"
+      ],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": true
+        },
+        {
+          "name": "引用文档集合",
+          "passed": true
+        },
+        {
+          "name": "答案包含 10 天",
+          "passed": true
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case_id": "05-context-follow-up",
+      "acceptance": [
+        "上下文追问"
+      ],
+      "status": "answered",
+      "passed": true,
+      "actions": [
+        "search_documents",
+        "read_document",
+        "finish"
+      ],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": true
+        },
+        {
+          "name": "引用文档集合",
+          "passed": true
+        },
+        {
+          "name": "答案包含 提前 3 个工作日",
+          "passed": true
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case_id": "06-transient-tool-failure",
+      "acceptance": [
+        "工具失败",
+        "观察错误后再选择动作"
+      ],
+      "status": "answered",
+      "passed": true,
+      "actions": [
+        "search_documents",
+        "search_documents",
+        "read_document",
+        "finish"
+      ],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": true
+        },
+        {
+          "name": "引用文档集合",
+          "passed": true
+        },
+        {
+          "name": "答案包含 10 天",
+          "passed": true
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case_id": "07-persistent-tool-failure",
+      "acceptance": [
+        "工具失败",
+        "保留已成功读取的资料"
+      ],
+      "status": "tool_error",
+      "passed": true,
+      "actions": [
+        "search_documents",
+        "read_document",
+        "read_document",
+        "read_document",
+        "read_document",
+        "finish"
+      ],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": true
+        },
+        {
+          "name": "引用文档集合",
+          "passed": true
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        },
+        {
+          "name": "未回答状态说明缺口",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case_id": "08-missing-topic",
+      "acceptance": [
+        "信息不足"
+      ],
+      "status": "needs_clarification",
+      "passed": true,
+      "actions": [
+        "finish"
+      ],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": true
+        },
+        {
+          "name": "引用文档集合",
+          "passed": true
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        },
+        {
+          "name": "具体追问和资料缺口",
+          "passed": true
+        },
+        {
+          "name": "未回答状态说明缺口",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case_id": "09-step-limit",
+      "acceptance": [
+        "执行上限"
+      ],
+      "status": "limit_reached",
+      "passed": true,
+      "actions": [
+        "search_documents"
+      ],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": true
+        },
+        {
+          "name": "引用文档集合",
+          "passed": true
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        },
+        {
+          "name": "未回答状态说明缺口",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case_id": "10-document-mutation",
+      "acceptance": [
+        "替换文档后答案变化"
+      ],
+      "status": "answered",
+      "passed": true,
+      "actions": [
+        "search_documents",
+        "read_document",
+        "finish"
+      ],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": true
+        },
+        {
+          "name": "引用文档集合",
+          "passed": true
+        },
+        {
+          "name": "答案包含 12 天",
+          "passed": true
+        },
+        {
+          "name": "答案不含 10 天",
+          "passed": true
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case_id": "11-conflict-removed",
+      "acceptance": [
+        "替换文档后动作变化"
+      ],
+      "status": "answered",
+      "passed": false,
+      "actions": [
+        "search_documents",
+        "read_document",
+        "read_document",
+        "finish"
+      ],
+      "checks": [
+        {
+          "name": "任务状态",
+          "passed": true
+        },
+        {
+          "name": "引用文档集合",
+          "passed": false
+        },
+        {
+          "name": "答案包含 30 天",
+          "passed": true
+        },
+        {
+          "name": "冲突组数",
+          "passed": true
+        },
+        {
+          "name": "故障实际触发",
+          "passed": true
+        },
+        {
+          "name": "实际检索次数",
+          "passed": true
+        },
+        {
+          "name": "引用来自实际成功读取的原文",
+          "passed": true
+        },
+        {
+          "name": "调用次数有界",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

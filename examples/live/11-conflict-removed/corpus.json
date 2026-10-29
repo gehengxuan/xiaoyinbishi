@@ -1,0 +1,115 @@
+{
+  "corpus_version": "synthetic-2026-10-28-v1:11-conflict-removed",
+  "synthetic": true,
+  "documents": [
+    {
+      "document_id": "D01",
+      "title": "费用报销管理办法",
+      "version_date": "2026-01-15",
+      "scope": "未注明",
+      "keywords": [
+        "报销",
+        "提交期限",
+        "票据",
+        "发票",
+        "出差"
+      ],
+      "chunks": [
+        {
+          "chunk_id": "C01",
+          "policy_key": "expense_submission_deadline",
+          "text": "报销材料应在费用发生后 30 天内提交。"
+        }
+      ]
+    },
+    {
+      "document_id": "D02",
+      "title": "费用报销补充通知",
+      "version_date": "2026-09-01",
+      "scope": "未注明",
+      "keywords": [
+        "报销",
+        "提交期限",
+        "票据",
+        "发票",
+        "出差"
+      ],
+      "chunks": [
+        {
+          "chunk_id": "C01",
+          "policy_key": "expense_submission_deadline",
+          "text": "报销材料应在费用发生后 30 天内提交。"
+        }
+      ]
+    },
+    {
+      "document_id": "D03",
+      "title": "员工休假制度",
+      "version_date": "2026-06-01",
+      "scope": "正式员工",
+      "keywords": [
+        "年假",
+        "带薪假",
+        "休假",
+        "提前申请",
+        "工作日"
+      ],
+      "chunks": [
+        {
+          "chunk_id": "C01",
+          "policy_key": "annual_leave_entitlement",
+          "text": "正式员工每年享有 10 天带薪年假。"
+        },
+        {
+          "chunk_id": "C02",
+          "policy_key": "annual_leave_notice",
+          "text": "年假须至少提前 3 个工作日申请。"
+        }
+      ]
+    },
+    {
+      "document_id": "D04",
+      "title": "影创 Studio 产品功能 FAQ",
+      "version_date": "2026-10-01",
+      "scope": "影创 Studio 演示产品",
+      "keywords": [
+        "字幕",
+        "视频",
+        "产品",
+        "离线",
+        "同步"
+      ],
+      "chunks": [
+        {
+          "chunk_id": "C01",
+          "policy_key": "studio_subtitles",
+          "text": "影创 Studio 支持自动生成字幕，并允许逐句编辑字幕文本。"
+        },
+        {
+          "chunk_id": "C02",
+          "policy_key": "studio_offline_sync",
+          "text": "影创 Studio 的离线版本不支持云端同步。"
+        }
+      ]
+    },
+    {
+      "document_id": "D05",
+      "title": "账号与密码 FAQ",
+      "version_date": "2026-08-20",
+      "scope": "公司演示账号",
+      "keywords": [
+        "密码",
+        "重置",
+        "账号",
+        "登录"
+      ],
+      "chunks": [
+        {
+          "chunk_id": "C01",
+          "policy_key": "password_reset",
+          "text": "忘记密码时，请通过公司内网的账号自助页面重置密码。"
+        }
+      ]
+    }
+  ]
+}

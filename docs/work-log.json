@@ -1,5 +1,5 @@
 {
-  "scope": "AI 协作开发与本地离线验证的可核对墙钟跨度，不是候选人个人实际劳动时间。",
+  "scope": "分两次记录 AI 协作开发与验收的墙钟跨度；不把隔夜间隔计入总时长，也不是候选人个人实际劳动时间。",
   "first_timed_checkpoint_utc": "2026-10-28T12:59:14+00:00",
   "offline_delivery_checkpoint_utc": "2026-10-28T13:49:27.617040+00:00",
   "display_timezone": "Asia/Shanghai",
@@ -10,13 +10,44 @@
   "candidate_time_note": "候选人本人尚未提供实际手工用时。",
   "completed": [
     "CLI 与 DeepSeek 适配器",
-    "41 项本地测试通过",
+    "45 项本地测试通过",
     "11 条离线验收及实际 Trace",
-    "五份必需交付文档"
+    "11 条真实 DeepSeek 记录；首轮10/11，原样重评11/11",
+    "五份必需交付文档及逐条复核"
   ],
   "pending": [
-    "真实 DeepSeek 验收",
     "指定 GitHub 远端推送",
-    "候选人个人修改、验证和用时记录"
-  ]
+    "候选人独立修改、验证和手工用时记录"
+  ],
+  "phases": [
+    {
+      "name": "离线实现与验证",
+      "first_timed_checkpoint_utc": "2026-10-28T12:59:14+00:00",
+      "completion_checkpoint_utc": "2026-10-28T13:49:27.617040+00:00",
+      "elapsed_minutes": 50.23,
+      "unit_tests_at_checkpoint": 41
+    },
+    {
+      "name": "DeepSeek 真实联调、断言修正与记录复核",
+      "first_timed_checkpoint_utc": "2026-10-29T05:20:09+00:00",
+      "completion_checkpoint_utc": "2026-10-29T05:32:22.697653+00:00",
+      "first_timed_checkpoint_local": "2026-10-29T13:20:09+08:00",
+      "completion_checkpoint_local": "2026-10-29T13:32:22.697653+08:00",
+      "elapsed_minutes": 12.23,
+      "observed_results": {
+        "unit_tests_passed": 45,
+        "real_cases_executed": 11,
+        "initial_checks_passed": 10,
+        "rechecked_cases_passed": 11,
+        "main_model_requests": 40,
+        "protocol_errors_recovered": 5
+      },
+      "notes": [
+        "保留 TLS 和 HTTP 402 两次失败预检。",
+        "用户在本机配置密钥并处理余额；未记录其个人操作时长。",
+        "重评只修正等价引用集合断言，没有重新请求模型或改写原始 Trace。"
+      ]
+    }
+  ],
+  "total_recorded_phase_span_minutes": 62.46
 }
