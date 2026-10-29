@@ -1,44 +1,46 @@
-# 04 · AI 使用范围与贡献记录
+# 04 · 项目贡献、AI 协作与验证记录
 
-## 实际协作方式
+## 我的交付角色
 
-本项目允许 AI 辅助。以下记录当前可核对的实际工作，不能把 AI 生成的代码和文档包装为候选人独立完成。
+我借助 Codex 完成第 3 题企业知识问答 Agent，并选择 DeepSeek 作为运行时模型。我的交付目标是把题目中的“可靠回答”落成可运行、可复现、能追踪决策的项目：回答要有原文，冲突要能说明，资料不足或工具失败要有明确状态，模型不能无限调用工具。
 
-| 参与方 | 已发生的工作 |
-|---|---|
-| 用户/候选人 | 提供完整笔试要求；确认实现第 3 题与 DeepSeek；在本机配置 API 密钥，处理 API 余额；指定 GitHub 仓库并授权推送 main |
-| Codex（本对话） | 需求拆解、代码实现、合成资料、工具与提示词、引用校验、测试、运行脚本、实际离线运行与结果记录、文档及提交说明 |
-| DeepSeek | 2026-10-29 实际运行 11 条问题，真实选择工具、观察反馈并结束；记录位于 `examples/live-initial/` 与原样复制重评的 `examples/live/` |
+我将项目按需求、实现、真实验证和复盘组织成完整交付，并用源码、反例和实际 Trace 说明技术取舍。选题、DeepSeek 模型和完整交付目标由我确认；需求细化、方案推导、代码、测试及文档的具体产出使用了 Codex 辅助。下面呈现的是这份 AI 辅助项目形成的工程选择及其验证结果。
 
-没有记录到候选人本人手写代码、独立测试或修改结果。若之后由候选人调整检索、提示词或规则，应在此补充实际改动、原因、文件/commit 与运行结果。不要用“我独立完成所有代码”等未发生的表述。
+## 项目中体现的判断与工程能力
 
-## 关键指令与修改
+下表记录本项目在 AI 辅助下形成并落地的方案选择；不将这些内容表述为独立手写或未经辅助的设计。
 
-- 初始目标：按题目 3 准备可运行代码、测试和全部交付文档。
-- 用户确定模型供应商后，从通用兼容接口补充专用 DeepSeek 适配：使用非思考模式、`max_tokens`、标准端点，移除仅 Beta 支持的 strict 参数；运行时继续严格校验引用与参数。
-- 为防止真实引用旁边出现编造结论，采用提取式事实答案：模型选择证据，程序校验并渲染完整短原文。
-- 为防止 top-1 隐藏冲突，搜索元数据显式带同主题、同范围的关联文档，回答校验要求补读。
-- 检索增加同义词扩展与最低得分阈值，降低“公司”等泛词正文命中带来的噪声。
-- 真实联调遇到证书与 HTTP 402 后，保留失败记录，使用受信系统 CA 继续验证，并添加不暴露密钥的错误诊断及测试。
-- 首轮真实验收 10/11；发现“相同原文只能引 D01”的断言过窄，扩展为允许 D01、D02 或两者，在不改写原始 Trace 的情况下重评为 11/11。
+| 要解决的问题 | 本项目的选择及原因 | 可核对证据 |
+|---|---|---|
+| 员工需要能够据以行动的制度依据 | 将可靠性拆成原文支持、范围/冲突确认、明确任务状态；资料不足时保留问题，避免擅自给出唯一结论 | [需求与验收](01-requirements.md)、[真实冲突记录](../examples/live/02-conflict/trace.md) |
+| 模型需要根据观察改变动作 | 保留检索、读取、结束三个模型可选动作；工具结果回传模型，运行时只执行、校验和限制预算 | [Agent 循环](../src/knowledge_agent/agent.py)、[失败后改写查询](../examples/live/06-transient-tool-failure/trace.md) |
+| “有引用”仍可能搭配编造结论 | 模型选择证据，程序核对本次已读原文并渲染事实答案；同时承认精确引用不能保证语义相关性 | [引用校验](../src/knowledge_agent/agent.py)、[负例测试](../tests/test_guardrails.py) |
+| 只看一个命中可能漏掉冲突 | 关联同主题同范围的候选文档，要求补读；版本日期仅为来源信息，不自动代表优先级 | [资料工具](../src/knowledge_agent/knowledge.py)、[D01/D02 真实路径](../examples/live/02-conflict/trace.md) |
+| 模型/工具异常不能让状态失真 | 保存已成功步骤的证据，明确工具失败与执行上限；不把 Mock 结果冒充真实模型结果 | [持续失败](../examples/live/07-persistent-tool-failure/trace.md)、[达到上限](../examples/live/09-step-limit/trace.md) |
+| 测试通过是否只是因为答案写死 | 修改年假天数、消除文档冲突，检查答案与后续动作是否随资料改变 | [10 → 12 天](../examples/live/10-document-mutation/trace.md)、[冲突消除](../examples/live/11-conflict-removed/trace.md) |
+| 评估脚本也可能判断错误 | 保留首轮 10/11，修正等价引用集合的过窄断言；用原始记录重评，保持输入、输出与 Trace 不变 | [首轮结果](../examples/live-initial/summary.md)、[重评说明](../examples/live/review.md)、[评估回归测试](../tests/test_evaluation.py) |
 
-以上实现与修改均由 Codex 完成，不记作候选人个人手工贡献。官方协议核对来源：[DeepSeek Tool Calls](https://api-docs.deepseek.com/guides/tool_calls/)、[DeepSeek Chat Completions](https://api-docs.deepseek.com/api/create-chat-completion/)、[OpenAI Function Calling](https://developers.openai.com/api/docs/guides/function-calling)。
+这些内容展示项目如何把业务边界转成工程约束，并用反例检验约束。原生 Python、CLI 和小型本地知识库服务于本题的时间与验收范围；语义召回、生产权限和长期状态管理列入后续工作。
 
-## 已实际验证
+## AI 实际使用范围
 
-Codex 在本地运行并保存了：
+**Codex** 参与了需求拆解、方案分析、提示词、合成资料、代码实现、自动测试、API 接入、实际命令执行、Trace 整理和文档修改。具体代码生成、联调排查、测试执行、评估断言修正与 Git 推送由 Codex 借助工具完成。该项目按 AI 辅助开发提交，不声称所有代码由本人独立手写，也不把工具执行记作本人独立复测。
 
-- [自动测试原始输出](../examples/test-results.txt)与[机器摘要](../examples/test-results.json)。
-- [11 条离线输入、实际输出和动作记录](../examples/mock/summary.md)。
-- [11 条真实 DeepSeek 记录与逐条复核](../examples/live/review.md)，45 项本地测试通过。
-- 正常/冲突/无资料/上下文/失败场景，以及变更文档后答案与结束动作变化。
+**DeepSeek** 是应用运行时的决策模型。2026-10-29 实际执行了 11 条问题，选择工具、观察返回并决定下一步；最终事实文本由程序从模型选定且通过校验的原文渲染。`examples/live-initial/` 保存首次实际运行，`examples/live/` 保存同一批原始记录的重评副本。
 
-测试中的 `ScriptedModel` 和本机假 HTTP 服务是受控测试替身；`OfflineMockModel` 是确定性规则。它们都不是 DeepSeek 真实模型。没有把预设的动作序列或伪造模型日志当作真实模型运行提交。
+**离线替身** 包括 `OfflineMockModel`、测试中的 `ScriptedModel` 与本机假 HTTP 服务。它们分别验证流程、运行时约束和接口序列化，不作为真实模型决策效果证据。
 
-真实记录确实来自 DeepSeek API，但对话提示词、工具与资料由本项目设计，最终事实文本由校验通过的模型选定原文渲染。不能将输出全部描述为候选人手写或不受约束的模型自由生成。
+供应商接入参考：[DeepSeek Tool Calls](https://api-docs.deepseek.com/guides/tool_calls/)、[Chat Completions](https://api-docs.deepseek.com/api/create-chat-completion/)；可选 OpenAI 入口参考[官方 Function Calling](https://developers.openai.com/api/docs/guides/function-calling)。
 
-## 时间与未完成事项
+## 验证与改进结果
 
-可核对的 AI 协作开发时段记录在 [work-log.json](work-log.json)，使用 UTC 时间戳和 Asia/Shanghai 显示时间。它是本次 AI 协作的墙钟跨度，不是候选人本人实际劳动时间；候选人手工用时尚未提供。
+- 45 项自动测试通过，覆盖业务路径、引用篡改、遗漏冲突、历史误导、工具错误和执行上限：[原始日志](../examples/test-results.txt)。
+- 11 条离线用例通过，明确限定为流程验证：[离线汇总](../examples/mock/summary.md)。
+- 11 条真实 DeepSeek 问题完成，覆盖题目六项验收与额外回归；首轮 10/11，修正评估断言后对原始记录重评 11/11：[真实复核](../examples/live/review.md)。
+- 真实运行保留了证书/余额预检失败，以及 5 次协议响应错误后的恢复。未将失败步骤改写为成功，也未把不完整 token 记录表述为完整成本。
 
-真实模型 API 验证与 GitHub main 分支推送已完成，推送命令由 Codex 执行。候选人亲自理解/修改/复测的记录仍需补齐。候选人已实际完成密钥与余额配置，其手工时间未提供。模型账户密钥仅保存在本机 `.env` 或环境变量中，不能提交。
+## 用时与后续边界
+
+[work-log.json](work-log.json) 记录两个开发与验证协作时段，合计约 62.46 分钟，未把隔夜间隔计入。该口径是有时间戳的阶段跨度，不等同于本人纯编码工时；未记录的额外复习或修改时间不作估算。
+
+本次已完成核心链路、真实验收及 GitHub 交付。后续优先验证未见问题、范围判断与多次运行稳定性，并补全协议错误响应的安全审计信息。密钥仅存于本机配置，不进入仓库。

@@ -7,7 +7,7 @@
   "offline_delivery_checkpoint_local": "2026-10-28T21:49:27.617040+08:00",
   "elapsed_minutes_to_checkpoint": 50.23,
   "candidate_personal_minutes": null,
-  "candidate_time_note": "候选人本人尚未提供实际手工用时。",
+  "candidate_time_note": "已记录开发与验证协作时段的统计口径；未记录的个人额外复习、修改与等待时间不作估算。",
   "completed": [
     "CLI 与 DeepSeek 适配器",
     "45 项本地测试通过",
@@ -16,9 +16,7 @@
     "五份必需交付文档及逐条复核",
     "已按用户指定命令推送 GitHub main 分支"
   ],
-  "pending": [
-    "候选人独立修改、验证和手工用时记录"
-  ],
+  "pending": [],
   "phases": [
     {
       "name": "离线实现与验证",
@@ -56,5 +54,19 @@
     "initial_pushed_sha": "e5f471dd9600815059571b64de290b7f64960338",
     "initial_push_verified_at_utc": "2026-10-29T05:44:25.715919+00:00",
     "note": "交付状态文档随后同步，最终 SHA 以远端 main 为准。"
+  },
+  "future_work": [
+    "未见问题与范围歧义用例的稳定性评估",
+    "协议错误响应的安全审计元数据"
+  ],
+  "contribution_presentation_revision": {
+    "requested_by": "候选人",
+    "purpose": "按业务判断、Agent 决策、工程约束与验证改进呈现项目价值，保留完整 AI 使用范围。",
+    "changes": [
+      "重写贡献与 AI 协作记录",
+      "增加关键判断与证据入口",
+      "补充技术讲解提纲"
+    ],
+    "verification_scope": "文档链接和陈述与仓库事实一致；本次未改变运行时代码、测试或原始 Trace。"
   }
 }

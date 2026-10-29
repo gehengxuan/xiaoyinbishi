@@ -1,8 +1,22 @@
 # 企业知识问答 Agent · 小影校招项目题 3
 
-Python CLI：模型选择检索或读取工具，观察实际返回后继续查证、追问或结束。答案带文档 ID、版本日期和原文片段；冲突无优先级时请求确认，工具失败和达到上限时明确返回未完成。
+面向查询制度或产品信息的员工，交付能核对依据的回答，并在冲突、资料不足和工具失败时给出明确状态。项目采用 Python CLI，模型选择检索或读取工具，观察实际返回后继续查证、追问或结束。
 
 **交付状态：45 项测试通过；11 条 DeepSeek 真实用例完成。首轮断言 10/11，修正一条过窄的引用集合断言后，同一批原始记录重评 11/11。代码已推送到 [GitHub 仓库](https://github.com/gehengxuan/xiaoyinbishi)的 `main` 分支。** 原始失败与重评结果分别保留；这是一轮小样本验收，不代表广泛稳定性。离线 Mock 仅证明流程。
+
+## 关键判断与工程证据
+
+本项目按“业务边界 → 模型决策 → 工程约束 → 验证改进”组织实现。评审可以直接检查以下取舍及其结果。
+
+| 能力 | 本项目的选择 | 证据 |
+|---|---|---|
+| 业务理解 | 将可靠回答落实为原文支持、冲突确认与明确的未完成状态；没有优先级依据时保留冲突 | [需求](docs/01-requirements.md)、[真实冲突路径](examples/live/02-conflict/trace.md) |
+| Agent 决策 | 每轮由模型选动作，工具观察回传模型；遇到失败可改写查询，持续失败可保留证据并停止 | [运行循环](src/knowledge_agent/agent.py)、[实际错误恢复](examples/live/06-transient-tool-failure/trace.md) |
+| 工程可靠性 | 校验已读原文、限制工具和步数、保留成功结果；状态与真实执行一致 | [负例测试](tests/test_guardrails.py)、[持续失败](examples/live/07-persistent-tool-failure/trace.md) |
+| 效果验证 | 除正常问答外，修改文档数值与冲突内容，检查答案和下一步动作是否随证据变化 | [数值变化](examples/live/10-document-mutation/trace.md)、[冲突消除](examples/live/11-conflict-removed/trace.md) |
+| 学习与改进 | 发现引用集合断言误判后保留首轮失败，用不变的原始记录重评；同时记录协议恢复和审计限制 | [首轮 10/11](examples/live-initial/summary.md)、[重评复核](examples/live/review.md) |
+
+项目以 AI 辅助方式完成，具体参与范围、交付职责和依据见[贡献与 AI 使用记录](docs/04-ai-usage.md)；[面试讲解提纲](docs/07-interview-walkthrough.md)按源码和实际 Trace 展开上述判断。
 
 ## 评审入口
 
@@ -17,7 +31,7 @@ Python CLI：模型选择检索或读取工具，观察实际返回后继续查�
 | 持续失败：保留已读资料 → 未完成 | [07-persistent-tool-failure/trace.md](examples/mock/07-persistent-tool-failure/trace.md) |
 | 自动化测试实际输出 | [examples/test-results.txt](examples/test-results.txt) |
 | 需求 / 设计 / 评估 | [01](docs/01-requirements.md) · [02](docs/02-solution.md) · [03](docs/03-evaluation.md) |
-| AI 使用与个人贡献边界 / 复盘 | [04](docs/04-ai-usage.md) · [05](docs/05-retrospective.md) |
+| 项目贡献与 AI 协作 / 复盘 / 面试讲解 | [04](docs/04-ai-usage.md) · [05](docs/05-retrospective.md) · [07](docs/07-interview-walkthrough.md) |
 
 ## 环境与安装
 
