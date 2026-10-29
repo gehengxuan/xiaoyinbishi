@@ -13,10 +13,10 @@
     "45 项本地测试通过",
     "11 条离线验收及实际 Trace",
     "11 条真实 DeepSeek 记录；首轮10/11，原样重评11/11",
-    "五份必需交付文档及逐条复核"
+    "五份必需交付文档及逐条复核",
+    "已按用户指定命令推送 GitHub main 分支"
   ],
   "pending": [
-    "指定 GitHub 远端推送",
     "候选人独立修改、验证和手工用时记录"
   ],
   "phases": [
@@ -49,5 +49,12 @@
       ]
     }
   ],
-  "total_recorded_phase_span_minutes": 62.46
+  "total_recorded_phase_span_minutes": 62.46,
+  "github_push": {
+    "repository": "https://github.com/gehengxuan/xiaoyinbishi",
+    "branch": "main",
+    "initial_pushed_sha": "e5f471dd9600815059571b64de290b7f64960338",
+    "initial_push_verified_at_utc": "2026-10-29T05:44:25.715919+00:00",
+    "note": "交付状态文档随后同步，最终 SHA 以远端 main 为准。"
+  }
 }

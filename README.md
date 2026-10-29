@@ -2,7 +2,7 @@
 
 Python CLI：模型选择检索或读取工具，观察实际返回后继续查证、追问或结束。答案带文档 ID、版本日期和原文片段；冲突无优先级时请求确认，工具失败和达到上限时明确返回未完成。
 
-**交付状态：45 项测试通过；11 条 DeepSeek 真实用例完成。首轮断言 10/11，修正一条过窄的引用集合断言后，同一批原始记录重评 11/11。GitHub 远端提交尚待完成。** 原始失败与重评结果分别保留；这是一轮小样本验收，不代表广泛稳定性。离线 Mock 仅证明流程。
+**交付状态：45 项测试通过；11 条 DeepSeek 真实用例完成。首轮断言 10/11，修正一条过窄的引用集合断言后，同一批原始记录重评 11/11。代码已推送到 [GitHub 仓库](https://github.com/gehengxuan/xiaoyinbishi)的 `main` 分支。** 原始失败与重评结果分别保留；这是一轮小样本验收，不代表广泛稳定性。离线 Mock 仅证明流程。
 
 ## 评审入口
 
@@ -126,4 +126,4 @@ PYTHONPATH=src python3 -m knowledge_agent --provider mock \
 
 ## 提交 GitHub
 
-代码和所有验收资料位于同一仓库。推送你指定的 GitHub 仓库后，提交：**题号 3、GitHub URL、最终 commit SHA**。获取方式和剩余步骤见 [06-submission.md](docs/06-submission.md)。
+代码和所有验收资料位于 [gehengxuan/xiaoyinbishi](https://github.com/gehengxuan/xiaoyinbishi) 的 `main` 分支。提交内容为：**题号 3、该 GitHub URL、最终 commit SHA**。SHA 获取方式与个人记录说明见 [06-submission.md](docs/06-submission.md)。
